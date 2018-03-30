@@ -20,13 +20,14 @@ def convert_adc_to_force(adc_value, a, b):
 
 
 if __name__ == '__main__':
+
+    # create node
+    rospy.init_node('force_feedback', anonymous=True)
+
     # Create a Python proxy for PSM2, name must match ros namespace
     p = dvrk.psm('PSM2')
 
     rate = rospy.Rate(500)
-
-    # create node
-    rospy.init_node('force_feedback', anonymous=True)
 
     # instantiating classes
     x_adc = utilities.XYdataFromADC(1)
@@ -35,8 +36,9 @@ if __name__ == '__main__':
     z_joint = p.get_current_joint_effort()[2]
 
     # # load linear equations parameters
-    # npz_xyz_data = np.load("xyz_linear_equation_parameters.npz")
-    # xyz_lin_eq_param = npz_xyz_data['xyz_equation_parameters']
+    load_lin_eq_param = np.load("calibration_equation.npz")
+    a_x_eq_param = load_lin_eq_param['a_x']
+    a_y_eq_param = load_lin_eq_param['a_y']
 
     # create publishers
     pub_fx = rospy.Publisher('/force_feedback/force_x', Float32, queue_size=1)
@@ -59,8 +61,8 @@ if __name__ == '__main__':
         position = p.get_current_joint_position()[2]
 
         # following numbers found from calibration
-        a_x = -5924 * position + 1981
-        a_y = -12373 * position + 3520
+        a_x = a_x_eq_param[0] * position + a_x_eq_param[1]
+        a_y = -a_y_eq_param[0] * position + a_y_eq_param[1]
         a_z = 618
 
         # measure force from force-feedback device

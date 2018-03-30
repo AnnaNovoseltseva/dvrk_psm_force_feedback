@@ -81,18 +81,16 @@ if __name__ == '__main__':
     opt_track = utilities.OpticalTracker()
     rate = rospy.Rate(100)
 
-    i = 0
     answer = 0
     # load transformation matrix from npz file
     npzfile = np.load("transformation_matrix.npz")
     transform_camera_to_robot = npzfile['transform']
-    print 'trans matrix', transform_camera_to_robot
 
     npz_lc_data = np.load("load_cell_linear_equation_parameters.npz")
     lc_lin_eq_param = npz_lc_data['lc_equation_parameters']
 
     # get reading when force is 0
-    for i in range(0, 300):
+    for i in range(0, 100):
         deq_adc_x.append(x_adc.get_value())
         deq_adc_y.append(y_adc.get_value())
         deq_adc_z.append(z_adc.get_value())
@@ -120,11 +118,10 @@ if __name__ == '__main__':
                 p_stat_def = p2_robot
 
             answer = raw_input("Start calibration data collection (cover optical markers on the mount)? (y/n) ")
+            i = 0
             if answer == 'y':
-
-                if opt_track.get_ot_data() is not None:
-
-                    for j in range(0, 300):
+                while i < 200:
+                    if opt_track.get_ot_data() is not None:
 
                         # find position of two optical trackers
                         p1 = opt_track.get_point_data(0)
@@ -160,9 +157,9 @@ if __name__ == '__main__':
                         deq_force_z.append(force_z_lc)
 
                         # measure force from force-feedback device
-                        force_x_m = x_adc.get_value() - b_x
-                        force_y_m = y_adc.get_value() - b_y
-                        force_z_m = z_adc.get_value() - b_z
+                        force_x_m = x_adc.get_value() #- b_x
+                        force_y_m = y_adc.get_value() #- b_y
+                        force_z_m = z_adc.get_value() #- b_z
                         force_z_mc = p.get_current_joint_effort()[2]
 
                         add_data_to_arr()
@@ -177,8 +174,8 @@ if __name__ == '__main__':
                             utilities.make_fig('Force X [N]', deq_x_data, deq_force_x, i, 100, 222)
                             utilities.make_fig('Force Y [N]', deq_x_data, deq_force_y, i, 100, 223)
                             utilities.make_fig('Force Z [N]', deq_x_data, deq_force_z, i, 100, 224)
-                            plt.pause(0.0001)
-                        rate.sleep()
+                            plt.pause(0.001)
+                        #rate.sleep()
 
             elif answer == 'n':
 
