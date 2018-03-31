@@ -71,7 +71,7 @@ if __name__ == '__main__':
     rospy.init_node('adc_listener', anonymous=True)
 
     # Create a Python proxy for PSM2, name must match ros namespace
-    p = dvrk.psm('PSM2')
+    p = dvrk.psm('PSM1')
 
     # create classes
     lc = utilities.ZLCdataFromADC(0)

@@ -79,7 +79,7 @@ if __name__ == '__main__':
             # find forces in each direction
             unit_vector = utilities.find_unit_vector(p_stat, p_mob)
             force_x = force_m*unit_vector[0]
-            force_y = force_m*unit_vector[1]
+            force_y = -force_m*unit_vector[1]
             force_z = force_m*unit_vector[2]
 
             # publish data

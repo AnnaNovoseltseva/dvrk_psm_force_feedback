@@ -82,8 +82,8 @@ if __name__ == '__main__':
         a_x, b_x = fit_data(adc_x, force_x)
         a_y, b_y = fit_data(adc_y, force_y)
 
-        #plot_data(a_x, b_x, adc_x, force_x)
-        #plot_data(a_y, b_y, adc_y, force_y)
+        plot_data(a_x, b_x, adc_x, force_x, 'force x')
+        plot_data(a_y, b_y, adc_y, force_y, 'force y')
 
         # write data in array
         arr_a_x.append(a_x)

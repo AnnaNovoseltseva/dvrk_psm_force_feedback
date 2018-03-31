@@ -25,7 +25,7 @@ if __name__ == '__main__':
     rospy.init_node('force_feedback', anonymous=True)
 
     # Create a Python proxy for PSM2, name must match ros namespace
-    p = dvrk.psm('PSM2')
+    p = dvrk.psm('PSM1')
 
     rate = rospy.Rate(500)
 
